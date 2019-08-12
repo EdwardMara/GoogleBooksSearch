@@ -7,15 +7,19 @@ import API from "../utils/API";
 import { Col, Row, Container } from "../components/Grid";
 import { List } from "../components/List";
 
+
+//saved page to show books of interest
 class Saved extends Component {
   state = {
     books: []
   };
 
+// immediately after component mounts, run getSavedBooks
   componentDidMount() {
     this.getSavedBooks();
   }
 
+  //calls the API and changes the state to reflect current list of saved books
   getSavedBooks = () => {
     API.getSavedBooks()
       .then(res =>
@@ -25,7 +29,7 @@ class Saved extends Component {
       )
       .catch(err => console.log(err));
   };
-
+//posts API to delete book then reloads updated list of books of interest.
   handleBookDelete = id => {
     API.deleteBook(id).then(res => this.getSavedBooks());
   };
@@ -46,8 +50,10 @@ class Saved extends Component {
         <Row>
           <Col size="md-12">
             <Card title="Saved Books" icon="download">
+             {/* if there are books in state */}
               {this.state.books.length ? (
                 <List>
+                  {/* return array of Book components with info from books array */}
                   {this.state.books.map(book => (
                     <Book
                       key={book._id}
@@ -57,6 +63,7 @@ class Saved extends Component {
                       authors={book.authors.join(", ")}
                       description={book.description}
                       image={book.image}
+                      // button that deletes this book
                       Button={() => (
                         <button
                           onClick={() => this.handleBookDelete(book._id)}
@@ -69,6 +76,7 @@ class Saved extends Component {
                   ))}
                 </List>
               ) : (
+                  //if there are no saved books display h2 tag
                 <h2 className="text-center">No Saved Books</h2>
               )}
             </Card>
